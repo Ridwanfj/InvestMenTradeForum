@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak - InvestGallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .filter-btn.active { background-color: #1e40af; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-800"><i class="fas fa-chart-line mr-2"></i>InvestGallery</h1>
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
+                <a href="contact.html" class="text-blue-600">Kontak</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bg-blue-800 text-white py-12">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-2">Hubungi Kami</h2>
+            <p class="text-blue-100">Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu Kota Tegal</p>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-6 py-12">
+        
+        <!-- Institusi Section -->
+        <div class="bg-white rounded-lg shadow p-8 mb-8 border-l-4 border-blue-800">
+            <div class="flex items-start gap-4">
+                <div class="bg-blue-800 w-14 h-14 rounded flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-building text-white text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 mb-1">INSTITUSI</p>
+                    <h3 class="text-2xl font-bold text-gray-800">Dinas Penanaman Modal dan Pelayanan Terpadu Satu Pintu</h3>
+                    <p class="text-xl text-gray-700 mt-1">Kota Tegal</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Alamat -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="bg-gray-100 w-10 h-10 rounded flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-gray-700"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Alamat</h3>
+                </div>
+                <p class="text-gray-600 mb-2">Jl. Ki Gede Sebayu No. 3<br>Tegal</p>
+                <a href="https://www.google.com/maps/search/Jl.+Ki+Gede+Sebayu+No.+3+Tegal" target="_blank" class="text-blue-800 hover:underline text-sm font-medium">
+                    <i class="fas fa-external-link-alt mr-1"></i>Lihat di Maps
+                </a>
+            </div>
+
+            <!-- Email -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="bg-gray-100 w-10 h-10 rounded flex items-center justify-center">
+                        <i class="fas fa-envelope text-gray-700"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Email</h3>
+                </div>
+                <a href="mailto:dpmptsp.tegalkota@gmail.com" class="text-gray-600 hover:text-blue-800 transition text-sm block break-all">
+                    dpmptsp.tegalkota@gmail.com
+                </a>
+            </div>
+
+            <!-- Telepon & Fax -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="bg-gray-100 w-10 h-10 rounded flex items-center justify-center">
+                        <i class="fas fa-phone text-gray-700"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800">Telepon & Fax</h3>
+                </div>
+                <div class="text-gray-600 text-sm space-y-1">
+                    <p><span class="text-gray-500">Telepon:</span> <a href="tel:+628233561011" class="hover:text-blue-800 font-medium">0283 356101</a></p>
+                    <p><span class="text-gray-500">Fax:</span> <span class="font-medium">0283 356101</span></p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Map Section -->
+        <div class="rounded-lg overflow-hidden shadow h-96 mb-8">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.7481234567!2d109.1319!3d-6.8689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6db5d5d5d5d5d5%3A0x1234567890!2sJl.%20Ki%20Gede%20Sebayu%20No.%203%2C%20Tegal!5e0!3m2!1sid!2sid!4v1234567890" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="bg-gray-50 rounded-lg p-8 border border-gray-200">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Akses Cepat</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <a href="tel:+628233561011" class="bg-white p-4 rounded-lg shadow-sm hover:shadow transition flex items-center gap-4 border border-gray-100">
+                    <div class="bg-blue-800 w-12 h-12 rounded flex items-center justify-center">
+                        <i class="fas fa-phone text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Telepon</p>
+                        <p class="font-bold text-gray-800">0283 356101</p>
+                    </div>
+                </a>
+
+                <a href="mailto:dpmptsp.tegalkota@gmail.com" class="bg-white p-4 rounded-lg shadow-sm hover:shadow transition flex items-center gap-4 border border-gray-100">
+                    <div class="bg-blue-800 w-12 h-12 rounded flex items-center justify-center">
+                        <i class="fas fa-envelope text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Email</p>
+                        <p class="font-bold text-gray-800 text-sm">Email Kami</p>
+                    </div>
+                </a>
+
+                <a href="https://www.google.com/maps/search/Jl.+Ki+Gede+Sebayu+No.+3+Tegal" target="_blank" class="bg-white p-4 rounded-lg shadow-sm hover:shadow transition flex items-center gap-4 border border-gray-100">
+                    <div class="bg-blue-800 w-12 h-12 rounded flex items-center justify-center">
+                        <i class="fas fa-map-marker-alt text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Lokasi</p>
+                        <p class="font-bold text-gray-800">Google Maps</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2026 InvestGallery. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvestGallery - Daftar Properti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .property-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-blue-800"><i class="fas fa-chart-line mr-2"></i>InvestGallery</a>
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
+                <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="bg-blue-900 text-white py-10">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-4xl font-bold">Apartemen SkyView</h2>
+            <p class="text-blue-100 mt-2">Daftar Unit Properti Tersedia</p>
+        </div>
+    </section>
+
+    <!-- Search & Filter -->
+    <div class="container mx-auto px-6 py-6">
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-4">
+            <div class="flex-1 relative">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="search-input" placeholder="Cari berdasarkan alamat, kelurahan, kecamatan..." 
+                       class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="flex gap-2">
+                <select id="filter-kecamatan" class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Semua Kecamatan</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="container mx-auto px-6 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+        </div>
+    </div>
+
+    <!-- Property List -->
+    <main id="content" class="container mx-auto px-6 pb-12 hidden">
+        <p class="text-gray-500 mb-4"><span id="total-count">0</span> properti ditemukan</p>
+        <div id="property-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be inserted here -->
+        </div>
+    </main>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="container mx-auto px-6 py-12 hidden">
+        <div class="bg-gray-100 rounded-xl p-8 text-center">
+            <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-600 mb-2">Tidak Ada Data</h3>
+            <p class="text-gray-500">Tidak ada properti yang sesuai dengan pencarian Anda.</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-state" class="container mx-auto px-6 py-12 hidden">
+        <div class="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
+            <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
+            <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Data</h3>
+            <p class="text-red-600 mb-4" id="error-message">Terjadi kesalahan saat mengambil data dari spreadsheet.</p>
+            <button onclick="fetchData()" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+                <i class="fas fa-redo mr-2"></i>Coba Lagi
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2026 InvestGallery. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+
+        // API endpoint (Vercel Serverless Function)
+        const API_URL = '/api/getData';
+
+        // Column mapping untuk Sheet1 (Data Utama)
+        // NO | FOTO | KOORDINAT | SUBZONA | ALAMAT | LUAS | STATUSTANAH | KBLI | KELURAHAN | KECAMATAN | NAMAPEMILIK | NO. TELP | NJOP
+        const COLUMNS = {
+            no: 0,
+            foto: 1,         
+            koordinat: 2,
+            subZona: 3,
+            alamat: 4,
+            luas: 5,
+            statusTanah: 6,
+            kbli: 7,
+            kelurahan: 8,
+            kecamatan: 9,
+            namaPemilik: 10,
+            noTelp: 11,
+            njop: 12
+        };
+        const COLUMNS_GAMBAR = {
+            no: 0,
+            linkGambar: 1
+        };
+
+        let allData = [];
+        let gambarMap = {}; // Map NO -> Link Gambar
+        async function fetchData() {
+            const loadingState = document.getElementById('loading-state');
+            const content = document.getElementById('content');
+            const errorState = document.getElementById('error-state');
+            const emptyState = document.getElementById('empty-state');
+
+            loadingState.classList.remove('hidden');
+            content.classList.add('hidden');
+            errorState.classList.add('hidden');
+            emptyState.classList.add('hidden');
+
+            try {
+                // Fetch data dari API serverless (Spreadsheet ID tersembunyi di server)
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari server');
+                }
+
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Terjadi kesalahan');
+                }
+
+                const rows = result.data.table.rows;
+                const rowsGambar = result.gambar.table.rows || [];
+
+                if (rows.length === 0) {
+                    throw new Error('Data tidak ditemukan di spreadsheet');
+                }
+
+                // Helper function untuk normalisasi NO (hapus spasi, convert ke string)
+                const normalizeNo = (val) => {
+                    if (val === null || val === undefined) return '';
+                    let str = String(val).trim();
+                    // Hapus .0 jika angka (misal 99.0 -> 99)
+                    if (str.match(/^\d+\.0$/)) {
+                        str = str.replace('.0', '');
+                    }
+                    return str;
+                };
+
+                // Build gambar map dari Sheet2 (NO -> Link Gambar)
+                gambarMap = {};
+                rowsGambar.forEach(row => {
+                    const cells = row.c;
+                    const no = normalizeNo(cells[COLUMNS_GAMBAR.no]?.v);
+                    const linkGambar = cells[COLUMNS_GAMBAR.linkGambar]?.v ? String(cells[COLUMNS_GAMBAR.linkGambar].v).trim() : '';
+                    if (no && linkGambar) {
+                        gambarMap[no] = linkGambar;
+                    }
+                });
+
+                // Parse all rows dari Sheet1
+                allData = rows.map((row, index) => {
+                    const cells = row.c;
+                    const no = normalizeNo(cells[COLUMNS.no]?.v);
+                    
+                    // Ambil foto: prioritas dari Sheet1, jika kosong ambil dari Sheet2 berdasarkan NO
+                    let foto = cells[COLUMNS.foto]?.v ? String(cells[COLUMNS.foto].v).trim() : '';
+                    if (!foto && no && gambarMap[no]) {
+                        foto = gambarMap[no];
+                    }
+
+                    return {
+                        index: index,
+                        no: no,
+                        foto: foto,
+                        koordinat: cells[COLUMNS.koordinat]?.v ? String(cells[COLUMNS.koordinat].v) : '',
+                        subZona: cells[COLUMNS.subZona]?.v ? String(cells[COLUMNS.subZona].v) : '-',
+                        alamat: cells[COLUMNS.alamat]?.v ? String(cells[COLUMNS.alamat].v) : '-',
+                        luas: cells[COLUMNS.luas]?.v ? String(cells[COLUMNS.luas].v) : '-',
+                        statusTanah: cells[COLUMNS.statusTanah]?.v ? String(cells[COLUMNS.statusTanah].v) : '-',
+                        kbli: cells[COLUMNS.kbli]?.v ? String(cells[COLUMNS.kbli].v) : '-',
+                        kelurahan: cells[COLUMNS.kelurahan]?.v ? String(cells[COLUMNS.kelurahan].v) : '-',
+                        kecamatan: cells[COLUMNS.kecamatan]?.v ? String(cells[COLUMNS.kecamatan].v) : '-',
+                        namaPemilik: cells[COLUMNS.namaPemilik]?.v ? String(cells[COLUMNS.namaPemilik].v) : '-',
+                        noTelp: cells[COLUMNS.noTelp]?.v ? String(cells[COLUMNS.noTelp].v) : '-',
+                        njop: cells[COLUMNS.njop]?.v ? String(cells[COLUMNS.njop].v) : '-'
+                    };
+                });
+
+                // Populate kecamatan filter
+                populateKecamatanFilter();
+
+                // Render all data
+                renderList(allData);
+
+                loadingState.classList.add('hidden');
+                content.classList.remove('hidden');
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('error-message').textContent = error.message;
+            }
+        }
+
+        function populateKecamatanFilter() {
+            // Normalize kecamatan ke title case untuk menghindari duplikasi case-sensitive
+            const kecamatanMap = new Map(); // Map lowercase -> display name (title case)
+            allData.forEach(d => {
+                if (d.kecamatan && d.kecamatan !== '-') {
+                    const lowerKey = d.kecamatan.toLowerCase();
+                    if (!kecamatanMap.has(lowerKey)) {
+                        // Convert to title case untuk display
+                        const titleCase = d.kecamatan.split(' ')
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                            .join(' ');
+                        kecamatanMap.set(lowerKey, titleCase);
+                    }
+                }
+            });
+            
+            const select = document.getElementById('filter-kecamatan');
+            select.innerHTML = '<option value="">Semua Kecamatan</option>';
+            [...kecamatanMap.values()].sort().forEach(kec => {
+                const option = document.createElement('option');
+                option.value = kec.toLowerCase(); 
+                option.textContent = kec;
+                select.appendChild(option);
+            });
+        }
+
+        function renderList(data) {
+            const container = document.getElementById('property-list');
+            const emptyState = document.getElementById('empty-state');
+            const content = document.getElementById('content');
+
+            if (data.length === 0) {
+                content.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            content.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            document.getElementById('total-count').textContent = data.length;
+
+            container.innerHTML = data.map(item => {
+                // Get image URL from foto field (bisa dari Sheet1 atau Sheet2)
+                const imageUrl = convertToDirectImageUrl(item.foto);
+                const imageNumber = item.no || (item.index + 1);
+                
+                // Truncate KBLI untuk card view
+                const kbliShort = item.kbli && item.kbli !== '-' 
+                    ? (item.kbli.length > 50 ? item.kbli.substring(0, 50) + '...' : item.kbli)
+                    : '-';
+
+                return `
+                    <a href="detail.html?row=${item.index}" class="property-card bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 block">
+                        <div class="relative h-48 overflow-hidden bg-gray-200">
+                            ${imageUrl ? `
+                            <img src="${imageUrl}" 
+                                 alt="Properti ${imageNumber}" 
+                                 class="w-full h-full object-cover"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 items-center justify-center absolute inset-0" style="display:none;">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-building text-4xl mb-2 opacity-80"></i>
+                                    <p class="text-sm opacity-70">Foto tidak tersedia</p>
+                                </div>
+                            </div>
+                            ` : `
+                            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-building text-4xl mb-2 opacity-80"></i>
+                                    <p class="text-sm opacity-70">Properti #${imageNumber}</p>
+                                </div>
+                            </div>
+                            `}
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold line-clamp-1 max-w-[200px]">
+                                    ${item.subZona}
+                                </span>
+                            </div>
+                            <div class="absolute top-3 right-3">
+                                <span class="bg-white/90 text-gray-800 px-2 py-1 rounded text-xs font-bold">
+                                    #${imageNumber}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2 text-gray-800 line-clamp-2">${item.alamat}</h3>
+                            <div class="space-y-1 text-sm text-gray-500">
+                                <p><i class="fas fa-map-marker-alt w-5 text-blue-500"></i> ${item.kelurahan}, ${item.kecamatan}</p>
+                                <p><i class="fas fa-ruler-combined w-5 text-green-500"></i> ${item.luas}</p>
+                                <p><i class="fas fa-file-contract w-5 text-orange-500"></i> ${item.statusTanah || '-'}</p>
+                                <p><i class="fas fa-user w-5 text-purple-500"></i> ${item.namaPemilik}</p>
+                                ${item.njop && item.njop !== '-' ? `<p><i class="fas fa-money-bill-wave w-5 text-emerald-500"></i> NJOP: ${item.njop}</p>` : ''}
+                            </div>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-blue-600 font-semibold text-sm">Lihat Detail <i class="fas fa-arrow-right ml-1"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const kecamatanFilter = document.getElementById('filter-kecamatan').value.toLowerCase();
+
+            const filtered = allData.filter(item => {
+                const matchSearch = !searchTerm || 
+                    item.alamat.toLowerCase().includes(searchTerm) ||
+                    item.kelurahan.toLowerCase().includes(searchTerm) ||
+                    item.kecamatan.toLowerCase().includes(searchTerm) ||
+                    item.namaPemilik.toLowerCase().includes(searchTerm) ||
+                    item.subZona.toLowerCase().includes(searchTerm) ||
+                    item.kbli.toLowerCase().includes(searchTerm) ||
+                    item.no.toLowerCase().includes(searchTerm);
+
+                const matchKecamatan = !kecamatanFilter || item.kecamatan.toLowerCase() === kecamatanFilter;
+
+                return matchSearch && matchKecamatan;
+            });
+
+            renderList(filtered);
+        }
+
+        // Event listeners
+        document.getElementById('search-input').addEventListener('input', filterData);
+        document.getElementById('filter-kecamatan').addEventListener('change', filterData);
+
+        // Fetch on page load
+        fetchData();
+
+        // Convert Google Drive links to direct image URLs
+        function convertToDirectImageUrl(url) {
+            if (!url) return '';
+            
+            url = String(url).trim();
+            
+            // Google Drive format: https://drive.google.com/file/d/FILE_ID/view
+            const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
+            if (driveMatch) {
+                const fileId = driveMatch[1];
+                // Try thumbnail URL which is more reliable
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+            }
+            
+            // Google Drive format: https://drive.google.com/open?id=FILE_ID
+            const driveMatch2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+            if (driveMatch2) {
+                const fileId = driveMatch2[1];
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+            }
+
+            // Google Drive direct link format: https://drive.google.com/uc?id=FILE_ID
+            const driveMatch3 = url.match(/drive\.google\.com\/uc\?id=([^&]+)/);
+            if (driveMatch3) {
+                const fileId = driveMatch3[1];
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+            }
+            
+            // Already a direct URL
+            if (url.startsWith('http') || url.startsWith('//')) {
+                return url;
+            }
+            
+            return '';
+        }
+    </script>
+
+</body>
+</html>
