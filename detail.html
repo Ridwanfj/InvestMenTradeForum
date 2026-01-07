@@ -17,7 +17,19 @@
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png" alt="Logo" class="h-16 mr-2">TEGAL INVESTMENT & TRADE FORUM 2026</a>
+            <!-- Hamburger Button -->
+            <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
             <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
+                <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
+            </nav>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <nav class="container mx-auto px-6 py-4 flex flex-col space-y-3 font-medium">
                 <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
                 <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
                 <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
@@ -122,6 +134,14 @@
             <p>&copy; 2026 TEGAL INVESTMENT & TRADE FORUM. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Hamburger Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
 
     <script>
         // API endpoint (Vercel Serverless Function)
