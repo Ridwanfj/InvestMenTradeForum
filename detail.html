@@ -398,31 +398,35 @@
             
             url = String(url).trim();
             
+            // Cache busting - tambah timestamp agar browser selalu ambil gambar terbaru
+            const cacheBuster = `&t=${Date.now()}`;
+            
             // Google Drive format: https://drive.google.com/file/d/FILE_ID/view
             const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
             if (driveMatch) {
                 const fileId = driveMatch[1];
                 // Try thumbnail URL which is more reliable
-                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
             
             // Google Drive format: https://drive.google.com/open?id=FILE_ID
             const driveMatch2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
             if (driveMatch2) {
                 const fileId = driveMatch2[1];
-                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
 
             // Google Drive direct link format: https://drive.google.com/uc?id=FILE_ID
             const driveMatch3 = url.match(/drive\.google\.com\/uc\?id=([^&]+)/);
             if (driveMatch3) {
                 const fileId = driveMatch3[1];
-                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
             
-            // Already a direct URL
+            // Already a direct URL - tambah cache buster
             if (url.startsWith('http') || url.startsWith('//')) {
-                return url;
+                const separator = url.includes('?') ? '&' : '?';
+                return `${url}${separator}t=${Date.now()}`;
             }
             
             return '';
