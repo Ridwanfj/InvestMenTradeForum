@@ -187,7 +187,7 @@
             { key: 'kecamatan', label: 'Kecamatan', icon: 'fas fa-city', color: 'cyan' },
             { key: 'luas', label: 'Perkiraan Luas', icon: 'fas fa-ruler-combined', color: 'yellow' },
             { key: 'statusTanah', label: 'Status Tanah', icon: 'fas fa-file-contract', color: 'orange' },
-            { key: 'kbli', label: 'KBLI', icon: 'fas fa-industry', color: 'indigo', isLong: true },
+            { key: 'kbli', label: 'KBLI', icon: 'fas fa-industry', color: 'indigo', isScrollable: true },
             { key: 'namaSpt', label: 'Nama SPT', icon: 'fas fa-user', color: 'red' },
             { key: 'noTelp', label: 'No. Telepon', icon: 'fas fa-phone', color: 'teal', isPhone: true },
             { key: 'zonaZnt', label: 'Zona ZNT', icon: 'fas fa-map', color: 'amber', isCurrency: true },
@@ -455,6 +455,21 @@
                 if (field.isCurrency && value !== '-') {
                     value = formatRupiah(value);
                 }
+
+                // Render value content based on field type
+                let valueHtml;
+                if (field.isPhone) {
+                    valueHtml = `<p class="font-semibold text-gray-800"><a href="tel:${data[field.key]}" class="text-blue-600 hover:underline">${value}</a></p>`;
+                } else if (field.isScrollable) {
+                    // Scrollable textarea untuk teks panjang seperti KBLI
+                    valueHtml = `
+                        <div class="mt-1 bg-gray-50 border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+                            ${value}
+                        </div>
+                    `;
+                } else {
+                    valueHtml = `<p class="font-semibold text-gray-800">${value}</p>`;
+                }
                 
                 const html = `
                     <div class="info-row flex items-start p-4 transition">
@@ -463,12 +478,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm text-gray-500">${field.label}</p>
-                            ${field.isPhone 
-                                ? `<p class="font-semibold text-gray-800"><a href="tel:${data[field.key]}" class="text-blue-600 hover:underline">${value}</a></p>`
-                                : field.isLong 
-                                    ? `<p class="font-semibold text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">${value}</p>`
-                                    : `<p class="font-semibold text-gray-800">${value}</p>`
-                            }
+                            ${valueHtml}
                         </div>
                     </div>
                 `;
