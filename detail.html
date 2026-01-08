@@ -144,9 +144,18 @@
     </script>
 
     <script>
+        // ========== MODE LOKAL ==========
+        const LOCAL_MODE = false;
+        const SPREADSHEET_ID = '';
+        const SPREADSHEET_GAMBAR_ID = '';
+        const SHEET_NAME = 'Sheet1';
+        const SHEET_GAMBAR_NAME = 'Sheet1';
+        // =================================
+
         // API endpoint (Vercel Serverless Function)
         const API_URL = '/api/getData';
 
+        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
         const COLUMNS = {
             no: 0,
             foto: 1,       
@@ -158,9 +167,11 @@
             kbli: 7,
             kelurahan: 8,
             kecamatan: 9,
-            namaPemilik: 10,
+            namaSpt: 10,
             noTelp: 11,
-            njop: 12
+            zonaZnt: 12,
+            njopBumi: 13,
+            njopBangunan: 14
         };
 
         const COLUMNS_GAMBAR = {
@@ -174,12 +185,14 @@
             { key: 'alamat', label: 'Alamat', icon: 'fas fa-map-pin', color: 'green' },
             { key: 'kelurahan', label: 'Kelurahan', icon: 'fas fa-landmark', color: 'purple' },
             { key: 'kecamatan', label: 'Kecamatan', icon: 'fas fa-city', color: 'cyan' },
-            { key: 'luas', label: 'Luas', icon: 'fas fa-ruler-combined', color: 'yellow' },
+            { key: 'luas', label: 'Perkiraan Luas', icon: 'fas fa-ruler-combined', color: 'yellow' },
             { key: 'statusTanah', label: 'Status Tanah', icon: 'fas fa-file-contract', color: 'orange' },
             { key: 'kbli', label: 'KBLI', icon: 'fas fa-industry', color: 'indigo', isLong: true },
-            { key: 'namaPemilik', label: 'Nama Pemilik', icon: 'fas fa-user', color: 'red' },
+            { key: 'namaSpt', label: 'Nama SPT', icon: 'fas fa-user', color: 'red' },
             { key: 'noTelp', label: 'No. Telepon', icon: 'fas fa-phone', color: 'teal', isPhone: true },
-            { key: 'njop', label: 'NJOP', icon: 'fas fa-money-bill-wave', color: 'emerald' },
+            { key: 'zonaZnt', label: 'Zona ZNT', icon: 'fas fa-map', color: 'amber', isCurrency: true },
+            { key: 'njopBumi', label: 'NJOP Bumi', icon: 'fas fa-money-bill-wave', color: 'emerald', isCurrency: true },
+            { key: 'njopBangunan', label: 'NJOP Bangunan', icon: 'fas fa-building', color: 'lime', isCurrency: true },
             { key: 'koordinat', label: 'Koordinat', icon: 'fas fa-crosshairs', color: 'pink' }
         ];
 
@@ -199,21 +212,50 @@
             errorState.classList.add('hidden');
 
             try {
-                // Fetch data dari API serverless (Spreadsheet ID tersembunyi di server)
-                const response = await fetch(API_URL);
-                
-                if (!response.ok) {
-                    throw new Error('Gagal mengambil data dari server');
-                }
+                let rows, rowsGambar;
 
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.message || 'Terjadi kesalahan');
-                }
+                if (LOCAL_MODE) {
+                    // Mode Lokal: Fetch langsung dari Google Sheets
+                    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+                    const SHEET_GAMBAR_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_GAMBAR_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_GAMBAR_NAME)}`;
 
-                const rows = result.data.table.rows;
-                const rowsGambar = result.gambar.table.rows || [];
+                    const [responseData, responseGambar] = await Promise.all([
+                        fetch(SHEET_URL),
+                        fetch(SHEET_GAMBAR_URL)
+                    ]);
+
+                    if (!responseData.ok) throw new Error('Gagal mengambil data spreadsheet utama');
+                    if (!responseGambar.ok) throw new Error('Gagal mengambil data spreadsheet gambar');
+
+                    const textData = await responseData.text();
+                    const textGambar = await responseGambar.text();
+
+                    // Parse Google Sheets JSON response
+                    const cleanData = textData.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+                    const cleanGambar = textGambar.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+
+                    const jsonData = JSON.parse(cleanData);
+                    const jsonGambar = JSON.parse(cleanGambar);
+
+                    rows = jsonData.table.rows;
+                    rowsGambar = jsonGambar.table.rows || [];
+                } else {
+                    // Mode Production: Fetch dari API serverless (Spreadsheet ID tersembunyi di server)
+                    const response = await fetch(API_URL);
+                    
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data dari server');
+                    }
+
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.message || 'Terjadi kesalahan');
+                    }
+
+                    rows = result.data.table.rows;
+                    rowsGambar = result.gambar.table.rows || [];
+                }
 
                 if (rows.length === 0) {
                     throw new Error('Data tidak ditemukan di spreadsheet');
@@ -265,9 +307,11 @@
                         kbli: cells[COLUMNS.kbli]?.v ? String(cells[COLUMNS.kbli].v) : '-',
                         kelurahan: cells[COLUMNS.kelurahan]?.v ? String(cells[COLUMNS.kelurahan].v) : '-',
                         kecamatan: cells[COLUMNS.kecamatan]?.v ? String(cells[COLUMNS.kecamatan].v) : '-',
-                        namaPemilik: cells[COLUMNS.namaPemilik]?.v ? String(cells[COLUMNS.namaPemilik].v) : '-',
+                        namaSpt: cells[COLUMNS.namaSpt]?.v ? String(cells[COLUMNS.namaSpt].v) : '-',
                         noTelp: cells[COLUMNS.noTelp]?.v ? String(cells[COLUMNS.noTelp].v) : '-',
-                        njop: cells[COLUMNS.njop]?.v ? String(cells[COLUMNS.njop].v) : '-'
+                        zonaZnt: cells[COLUMNS.zonaZnt]?.v ? String(cells[COLUMNS.zonaZnt].v) : '-',
+                        njopBumi: cells[COLUMNS.njopBumi]?.v ? String(cells[COLUMNS.njopBumi].v) : '-',
+                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-'
                     };
                 });
 
@@ -384,6 +428,16 @@
             return '';
         }
 
+        // Format angka ke Rupiah
+        function formatRupiah(value) {
+            if (!value || value === '-') return '-';
+            // Hapus semua karakter non-digit
+            const num = String(value).replace(/\D/g, '');
+            if (!num) return '-';
+            // Format dengan separator ribuan
+            return 'Rp ' + num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
         // Info fields rendering
         function renderInfoFields(data) {
             const container = document.getElementById('info-container');
@@ -391,7 +445,12 @@
 
             // Tampilkan semua fields (tidak ada yang di-skip)
             infoFields.forEach(field => {
-                const value = data[field.key] || '-';
+                let value = data[field.key] || '-';
+                
+                // Format currency jika isCurrency = true
+                if (field.isCurrency && value !== '-') {
+                    value = formatRupiah(value);
+                }
                 
                 const html = `
                     <div class="info-row flex items-start p-4 transition">
@@ -401,7 +460,7 @@
                         <div class="flex-1 min-w-0">
                             <p class="text-sm text-gray-500">${field.label}</p>
                             ${field.isPhone 
-                                ? `<p class="font-semibold text-gray-800"><a href="tel:${value}" class="text-blue-600 hover:underline">${value}</a></p>`
+                                ? `<p class="font-semibold text-gray-800"><a href="tel:${data[field.key]}" class="text-blue-600 hover:underline">${value}</a></p>`
                                 : field.isLong 
                                     ? `<p class="font-semibold text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">${value}</p>`
                                     : `<p class="font-semibold text-gray-800">${value}</p>`
