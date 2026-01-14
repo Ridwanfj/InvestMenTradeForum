@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,99 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .property-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
-        .skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .skeleton {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        /* Popup Disclaimer Styles */
+        .popup-backdrop {
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .popup-content {
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .disclaimer-item {
+            transition: all 0.2s ease;
+        }
+
+        .disclaimer-item:hover {
+            transform: translateX(4px);
+        }
+
+        .accept-button {
+            transition: all 0.3s ease;
+        }
+
+        .accept-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .accept-button:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png" alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026</a>
+            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png"
+                    alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026</a>
             <!-- Hamburger Button -->
             <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
                 <i class="fas fa-bars text-2xl"></i>
@@ -49,11 +133,12 @@
         <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-4">
             <div class="flex-1 relative">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" id="search-input" placeholder="Cari berdasarkan alamat, kelurahan, kecamatan..." 
-                       class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="search-input" placeholder="Cari berdasarkan alamat, kelurahan, kecamatan..."
+                    class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div class="flex gap-2">
-                <select id="filter-kecamatan" class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="filter-kecamatan"
+                    class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Semua Kecamatan</option>
                 </select>
             </div>
@@ -95,7 +180,8 @@
             <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
             <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Data</h3>
             <p class="text-red-600 mb-4" id="error-message">Terjadi kesalahan saat mengambil data dari spreadsheet.</p>
-            <button onclick="fetchData()" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+            <button onclick="fetchData()"
+                class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
                 <i class="fas fa-redo mr-2"></i>Coba Lagi
             </button>
         </div>
@@ -109,7 +195,7 @@
 
     <script>
         // Hamburger Menu Toggle
-        document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('menu-toggle').addEventListener('click', function () {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
@@ -128,7 +214,7 @@
         // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
         const COLUMNS = {
             no: 0,
-            foto: 1,         
+            foto: 1,
             koordinat: 2,
             subZona: 3,
             alamat: 4,
@@ -192,13 +278,13 @@
                 } else {
                     // Mode Production: Fetch dari API serverless (Spreadsheet ID tersembunyi di server)
                     const response = await fetch(API_URL);
-                    
+
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data dari server');
                     }
 
                     const result = await response.json();
-                    
+
                     if (!result.success) {
                         throw new Error(result.message || 'Terjadi kesalahan');
                     }
@@ -237,7 +323,7 @@
                 allData = rows.map((row, index) => {
                     const cells = row.c;
                     const no = normalizeNo(cells[COLUMNS.no]?.v);
-                    
+
                     // Ambil foto: prioritas dari Sheet1, jika kosong ambil dari Sheet2 berdasarkan NO
                     let foto = cells[COLUMNS.foto]?.v ? String(cells[COLUMNS.foto].v).trim() : '';
                     if (!foto && no && gambarMap[no]) {
@@ -296,12 +382,12 @@
                     }
                 }
             });
-            
+
             const select = document.getElementById('filter-kecamatan');
             select.innerHTML = '<option value="">Semua Kecamatan</option>';
             [...kecamatanMap.values()].sort().forEach(kec => {
                 const option = document.createElement('option');
-                option.value = kec.toLowerCase(); 
+                option.value = kec.toLowerCase();
                 option.textContent = kec;
                 select.appendChild(option);
             });
@@ -327,9 +413,9 @@
                 // Get image URL from foto field (bisa dari Sheet1 atau Sheet2)
                 const imageUrl = convertToDirectImageUrl(item.foto);
                 const imageNumber = item.no || (item.index + 1);
-                
+
                 // Truncate KBLI untuk card view
-                const kbliShort = item.kbli && item.kbli !== '-' 
+                const kbliShort = item.kbli && item.kbli !== '-'
                     ? (item.kbli.length > 50 ? item.kbli.substring(0, 50) + '...' : item.kbli)
                     : '-';
 
@@ -389,7 +475,7 @@
             const kecamatanFilter = document.getElementById('filter-kecamatan').value.toLowerCase();
 
             const filtered = allData.filter(item => {
-                const matchSearch = !searchTerm || 
+                const matchSearch = !searchTerm ||
                     item.alamat.toLowerCase().includes(searchTerm) ||
                     item.kelurahan.toLowerCase().includes(searchTerm) ||
                     item.kecamatan.toLowerCase().includes(searchTerm) ||
@@ -427,12 +513,12 @@
         // Convert Google Drive links to direct image URLs
         function convertToDirectImageUrl(url) {
             if (!url) return '';
-            
+
             url = String(url).trim();
-            
+
             // Cache busting - tambah timestamp agar browser selalu ambil gambar terbaru
             const cacheBuster = `&t=${Date.now()}`;
-            
+
             // Google Drive format: https://drive.google.com/file/d/FILE_ID/view
             const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
             if (driveMatch) {
@@ -440,7 +526,7 @@
                 // Try thumbnail URL which is more reliable
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
-            
+
             // Google Drive format: https://drive.google.com/open?id=FILE_ID
             const driveMatch2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
             if (driveMatch2) {
@@ -454,16 +540,173 @@
                 const fileId = driveMatch3[1];
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
-            
+
             // Already a direct URL - tambah cache buster
             if (url.startsWith('http') || url.startsWith('//')) {
                 const separator = url.includes('?') ? '&' : '?';
                 return `${url}${separator}t=${Date.now()}`;
             }
-            
+
             return '';
         }
     </script>
 
+    <!-- Disclaimer Popup -->
+    <div id="disclaimer-popup"
+        class="popup-backdrop fixed inset-0 w-full h-full flex items-center justify-center p-4 z-[100]"
+        style="background: rgba(15, 23, 42, 0.75); display: none;">
+        <div class="popup-content w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden"
+            style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+            <!-- Header -->
+            <div class="p-6 border-b"
+                style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); border-color: rgba(255,255,255,0.1);">
+                <div class="flex items-center gap-3">
+                    <svg class="w-8 h-8" style="color: #fbbf24;" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <h1 class="text-2xl font-bold" style="color: #ffffff;">Disclaimer Penting</h1>
+                </div>
+                <p class="mt-2 text-sm" style="color: rgba(255,255,255,0.9);">Forum Investasi Tegal 2026</p>
+            </div>
+            <!-- Content -->
+            <div class="p-6" style="max-height: 60vh; overflow-y: auto;">
+                <p class="text-sm mb-6" style="color: #475569;">Mohon baca dengan seksama sebelum melanjutkan:</p>
+                <div class="space-y-4">
+                    <!-- Item 1 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data yang tersaji dalam
+                            halaman website forum Investasi Tegal 2026 merupakan hasil survei Dinas Penanaman Modal dan
+                            Pelayanan Terpadu Satu Pintu Kota Tegal dan sumber data lainnya.</p>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data yang tersaji belum
+                            dikonfirmasikan kepada pemilik properti.</p>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data disajikan dengan
+                            tujuan untuk promosi potensi Investasi.</p>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Konfirmasi terhadap data properti
+                            dapat disampaikan melalui chat ke helpdesk <span class="font-semibold"
+                                style="color: #2563eb;">08112970114</span> pada hari dan jam kerja.</p>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi, komunikasi dan transaksi
+                            lebih lanjut dilakukan secara langsung antara calon investor yang berminat dengan pemilik
+                            properti.</p>
+                    </div>
+                    <!-- Item 6 - Warning -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed font-semibold" style="color: #991b1b;">Membebaskan segala
+                            tuntutan hukum bagi administrator atas penyalahgunaan informasi yang tersaji dalam halaman
+                            website ini.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="p-6 border-t" style="background: #f8fafc; border-color: #e2e8f0;">
+                <button id="accept-disclaimer-btn"
+                    class="accept-button w-full py-3 px-6 rounded-lg font-semibold text-white text-base"
+                    style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);">
+                    Saya Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Disclaimer Popup Logic
+        (function () {
+            const DISCLAIMER_KEY = 'fit2026_disclaimer_accepted';
+            const popup = document.getElementById('disclaimer-popup');
+            const acceptBtn = document.getElementById('accept-disclaimer-btn');
+
+            // Check if user has already accepted disclaimer
+            function hasAcceptedDisclaimer() {
+                return localStorage.getItem(DISCLAIMER_KEY) === 'true';
+            }
+
+            // Show popup if not accepted
+            function showPopup() {
+                if (!hasAcceptedDisclaimer()) {
+                    popup.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            // Hide popup and save acceptance
+            function hidePopup() {
+                popup.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = '';
+                    localStorage.setItem(DISCLAIMER_KEY, 'true');
+                }, 300);
+            }
+
+            // Event listener for accept button
+            acceptBtn.addEventListener('click', hidePopup);
+
+            // Show popup on page load
+            showPopup();
+        })();
+    </script>
+
 </body>
+
 </html>
