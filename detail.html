@@ -136,9 +136,9 @@
                         class="flex-1 min-w-fit bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition text-center">
                         <i class="fab fa-whatsapp mr-2"></i>WhatsApp
                     </a>
-                    <a id="btn-maps" href="#" target="_blank"
+                    <a id="btn-peminatan" href="peminatan.html"
                         class="flex-1 min-w-fit bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition text-center">
-                        <i class="fas fa-directions mr-2"></i>Rute
+                        <i class="fas fa-heart mr-2"></i>Peminatan
                     </a>
                 </div>
             </div>
@@ -407,7 +407,6 @@
 
             document.getElementById('peta-lokasi').src = `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
             document.getElementById('koordinat-text').textContent = `${lat}, ${lng}`;
-            document.getElementById('btn-maps').href = `https://www.google.com/maps?q=${lat},${lng}`;
 
             // Phone buttons - handle various formats
             const phoneRaw = data.noTelp ? String(data.noTelp) : '';
