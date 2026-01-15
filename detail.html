@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .info-row:hover { background-color: #f0f9ff; }
-        .skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .info-row:hover {
+            background-color: #f0f9ff;
+        }
+
+        .skeleton {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 font-sans">
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png" alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026</a>
+            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png"
+                    alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026</a>
             <!-- Hamburger Button -->
             <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
             <nav class="hidden md:flex space-x-6 font-medium">
                 <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="peminatan.html" class="hover:text-blue-600 transition">Peminatan</a>
                 <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
                 <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
             </nav>
@@ -31,6 +52,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <nav class="container mx-auto px-6 py-4 flex flex-col space-y-3 font-medium">
                 <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+                <a href="peminatan.html" class="hover:text-blue-600 transition">Peminatan</a>
                 <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
                 <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
             </nav>
@@ -61,26 +83,29 @@
     <!-- Content (hidden until loaded) -->
     <main id="content" class="container mx-auto px-6 py-12 hidden">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            
+
             <!-- Foto Properti -->
             <div class="space-y-4">
                 <div class="rounded-xl overflow-hidden shadow-lg relative bg-gray-200 h-80 md:h-96">
                     <img id="foto-properti" src="" alt="Foto Properti" class="w-full h-full object-cover">
-                    <div id="foto-fallback" class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center absolute inset-0 top-0 left-0" style="display:none;">
+                    <div id="foto-fallback"
+                        class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center absolute inset-0 top-0 left-0"
+                        style="display:none;">
                         <div class="text-center text-white p-6">
                             <i class="fas fa-image text-6xl mb-4 opacity-70"></i>
                             <p class="text-lg opacity-80">Foto tidak tersedia</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Peta Lokasi -->
                 <div class="bg-white rounded-xl shadow-lg p-4">
                     <h3 class="font-bold text-lg mb-3 text-blue-800">
                         <i class="fas fa-map-marker-alt mr-2"></i>Lokasi di Peta
                     </h3>
                     <div class="rounded-lg overflow-hidden">
-                        <iframe id="peta-lokasi" src="" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe id="peta-lokasi" src="" width="100%" height="250" style="border:0;" allowfullscreen=""
+                            loading="lazy"></iframe>
                     </div>
                     <p class="text-sm text-gray-500 mt-2">
                         <i class="fas fa-crosshairs mr-1"></i>Koordinat: <span id="koordinat-text"></span>
@@ -91,26 +116,32 @@
             <!-- Detail Informasi -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="bg-blue-800 text-white p-6">
+                    <span class="inline-block bg-white/20 px-3 py-1 rounded-full text-sm mb-2" id="nomor-properti">
+                        <i class="fas fa-hashtag mr-1"></i>No. -
+                    </span>
                     <h3 class="text-2xl font-bold" id="nama-properti">-</h3>
                     <span class="inline-block bg-blue-600 px-3 py-1 rounded-full text-sm mt-2">
                         <i class="fas fa-building mr-1"></i>Properti
                     </span>
                 </div>
-                
+
                 <div class="divide-y divide-gray-100" id="info-container">
                     <!-- Data akan diisi oleh JavaScript -->
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="p-6 bg-gray-50 flex flex-wrap gap-3">
-                    <a id="btn-call" href="#" class="flex-1 min-w-fit bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-center">
+                    <a id="btn-call" href="#"
+                        class="flex-1 min-w-fit bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-center">
                         <i class="fas fa-phone mr-2"></i>Hubungi
                     </a>
-                    <a id="btn-wa" href="#" target="_blank" class="flex-1 min-w-fit bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition text-center">
+                    <a id="btn-wa" href="#" target="_blank"
+                        class="flex-1 min-w-fit bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition text-center">
                         <i class="fab fa-whatsapp mr-2"></i>WhatsApp
                     </a>
-                    <a id="btn-maps" href="#" target="_blank" class="flex-1 min-w-fit bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition text-center">
-                        <i class="fas fa-directions mr-2"></i>Rute
+                    <a id="btn-peminatan" href="peminatan.html"
+                        class="flex-1 min-w-fit bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition text-center">
+                        <i class="fas fa-heart mr-2"></i>Peminatan
                     </a>
                 </div>
             </div>
@@ -123,7 +154,8 @@
             <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
             <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Data</h3>
             <p class="text-red-600 mb-4" id="error-message">Terjadi kesalahan saat mengambil data dari spreadsheet.</p>
-            <button onclick="fetchData()" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+            <button onclick="fetchData()"
+                class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
                 <i class="fas fa-redo mr-2"></i>Coba Lagi
             </button>
         </div>
@@ -137,7 +169,7 @@
 
     <script>
         // Hamburger Menu Toggle
-        document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('menu-toggle').addEventListener('click', function () {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
@@ -158,7 +190,7 @@
         // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
         const COLUMNS = {
             no: 0,
-            foto: 1,       
+            foto: 1,
             koordinat: 2,
             subZona: 3,
             alamat: 4,
@@ -242,13 +274,13 @@
                 } else {
                     // Mode Production: Fetch dari API serverless (Spreadsheet ID tersembunyi di server)
                     const response = await fetch(API_URL);
-                    
+
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data dari server');
                     }
 
                     const result = await response.json();
-                    
+
                     if (!result.success) {
                         throw new Error(result.message || 'Terjadi kesalahan');
                     }
@@ -284,15 +316,15 @@
                 });
 
                 console.log('Gambar Map:', gambarMap);
-           
+
                 const allData = rows.map((row, index) => {
                     const cells = row.c;
                     const no = normalizeNo(cells[COLUMNS.no]?.v);
-                    
+
                     let foto = cells[COLUMNS.foto]?.v ? String(cells[COLUMNS.foto].v).trim() : '';
                     if (!foto && no && gambarMap[no]) {
                         foto = gambarMap[no];
-                        console.log(`NO ${no}: Gambar dari Sheet2 -> ${foto}`); 
+                        console.log(`NO ${no}: Gambar dari Sheet2 -> ${foto}`);
                     }
 
                     return {
@@ -339,7 +371,11 @@
         function renderData(data) {
             // Header subtitle
             document.getElementById('header-subtitle').textContent = `${data.alamat}`;
-            
+
+            // Property number
+            const nomorProperti = data.no || (data.index + 1);
+            document.getElementById('nomor-properti').innerHTML = `<i class="fas fa-hashtag mr-1"></i>No. ${nomorProperti}`;
+
             // Property name (use alamat or first part)
             const namaProperti = data.alamat ? String(data.alamat).split(',')[0] : 'Detail Properti';
             document.getElementById('nama-properti').textContent = namaProperti;
@@ -348,13 +384,13 @@
             const fotoEl = document.getElementById('foto-properti');
             const fotoFallback = document.getElementById('foto-fallback');
             const imageUrl = convertToDirectImageUrl(data.foto);
-            
+
             if (imageUrl) {
                 fotoEl.src = imageUrl;
                 fotoEl.alt = `Properti #${data.no || data.index + 1}`;
                 fotoEl.style.display = 'block';
                 fotoFallback.style.display = 'none';
-                fotoEl.onerror = function() {
+                fotoEl.onerror = function () {
                     this.onerror = null;
                     this.style.display = 'none';
                     fotoFallback.style.display = 'flex';
@@ -367,7 +403,7 @@
             // Map and coordinates
             const koordinat = data.koordinat ? String(data.koordinat) : '';
             let lat = -6.2088, lng = 106.8456; // Default Jakarta
-            
+
             if (koordinat && koordinat.includes(',')) {
                 const parts = koordinat.split(',').map(s => parseFloat(s.trim()));
                 if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
@@ -395,12 +431,12 @@
         // Convert Google Drive links to direct image URLs
         function convertToDirectImageUrl(url) {
             if (!url) return '';
-            
+
             url = String(url).trim();
-            
+
             // Cache busting - tambah timestamp agar browser selalu ambil gambar terbaru
             const cacheBuster = `&t=${Date.now()}`;
-            
+
             // Google Drive format: https://drive.google.com/file/d/FILE_ID/view
             const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
             if (driveMatch) {
@@ -408,7 +444,7 @@
                 // Try thumbnail URL which is more reliable
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
-            
+
             // Google Drive format: https://drive.google.com/open?id=FILE_ID
             const driveMatch2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
             if (driveMatch2) {
@@ -422,13 +458,13 @@
                 const fileId = driveMatch3[1];
                 return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
             }
-            
+
             // Already a direct URL - tambah cache buster
             if (url.startsWith('http') || url.startsWith('//')) {
                 const separator = url.includes('?') ? '&' : '?';
                 return `${url}${separator}t=${Date.now()}`;
             }
-            
+
             return '';
         }
 
@@ -450,7 +486,7 @@
             // Tampilkan semua fields (tidak ada yang di-skip)
             infoFields.forEach(field => {
                 let value = data[field.key] || '-';
-                
+
                 // Format currency jika isCurrency = true
                 if (field.isCurrency && value !== '-') {
                     value = formatRupiah(value);
@@ -470,7 +506,7 @@
                 } else {
                     valueHtml = `<p class="font-semibold text-gray-800">${value}</p>`;
                 }
-                
+
                 const html = `
                     <div class="info-row flex items-start p-4 transition">
                         <div class="w-10 h-10 bg-${field.color}-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
@@ -491,4 +527,5 @@
     </script>
 
 </body>
+
 </html>

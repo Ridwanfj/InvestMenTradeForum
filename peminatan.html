@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="id" class="h-full">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surat Pernyataan Kepeminatan</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+
+    /* Font Inter hanya untuk form content */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    #app * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .signature-pad {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .signature-pad:active {
+      background: #f1f5f9;
+    }
+
+    /* Tambahan style untuk gradient agar lebih halus */
+    .bg-gradient-blue {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      background-attachment: fixed;
+    }
+  </style>
+</head>
+
+<body class="h-full overflow-auto bg-gradient-blue">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center">
+        <img src="Asset 1.png" alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026
+      </a>
+      <!-- Hamburger Button -->
+      <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+      <nav class="hidden md:flex space-x-6 font-medium">
+        <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+        <a href="peminatan.html" class="text-blue-600">Peminatan</a>
+        <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
+        <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
+      </nav>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+      <nav class="container mx-auto px-6 py-4 flex flex-col space-y-3 font-medium">
+        <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
+        <a href="peminatan.html" class="text-blue-600">Peminatan</a>
+        <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
+        <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
+      </nav>
+    </div>
+  </header>
+
+  <div id="app" class="w-full min-h-full"></div>
+  <script>
+    const defaultConfig = {
+      judul_form: "Surat Pernyataan Kepeminatan",
+      deskripsi: "Isi form di bawah ini dengan lengkap dan benar",
+      primary_color: "#0369a1", // Biru yang lebih kontras untuk tombol
+      secondary_color: "#ffffff",
+      background_color: "transparent", // Set transparan agar gradient body terlihat
+      text_color: "#0c4a6e",
+      accent_color: "#0ea5e9",
+      font_family: "Inter",
+      font_size: 16
+    };
+
+    // API endpoint (Vercel Serverless Function - URL aman tersembunyi di server)
+    const API_URL = '/api/submitPeminatan';
+
+    let isDrawing = false;
+    let signatureData = null;
+    let canvas, ctx;
+
+    const dataHandler = { onDataChanged(data) { } };
+
+    async function initializeApp() {
+      if (window.dataSdk && typeof window.dataSdk.init === 'function') {
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.warn("Data SDK gagal diinisialisasi.");
+        }
+      } else {
+        console.warn("Data SDK tidak ditemukan, menjalankan mode standalone.");
+      }
+
+      if (window.elementSdk && typeof window.elementSdk.init === 'function') {
+        await window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: (config) => renderUI(config),
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              { get: () => config.primary_color, set: (v) => window.elementSdk.setConfig({ primary_color: v }) },
+              { get: () => config.background_color, set: (v) => window.elementSdk.setConfig({ background_color: v }) }
+            ],
+            fontEditable: { get: () => config.font_family, set: (v) => window.elementSdk.setConfig({ font_family: v }) },
+            fontSizeable: { get: () => config.font_size, set: (v) => window.elementSdk.setConfig({ font_size: v }) }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["judul_form", config.judul_form || defaultConfig.judul_form],
+            ["deskripsi", config.deskripsi || defaultConfig.deskripsi]
+          ])
+        });
+        renderUI(window.elementSdk.config);
+      } else {
+        renderUI(defaultConfig);
+      }
+    }
+
+    function renderUI(config) {
+      const app = document.getElementById('app');
+      if (!app) return;
+
+      const baseSize = config.font_size || defaultConfig.font_size;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+
+      // Menggunakan transparent background pada app agar gradient di body terlihat
+      app.style.backgroundColor = 'transparent';
+      app.style.fontFamily = `${fontFamily}, sans-serif`;
+      app.style.fontSize = `${baseSize}px`;
+      app.style.color = textColor;
+
+      app.innerHTML = `
+        <div class="max-w-4xl mx-auto p-8">
+          <div class="mb-8 text-center">
+            <h1 class="font-bold mb-2" style="font-size: ${baseSize * 2}px; color: ${textColor};">${config.judul_form || defaultConfig.judul_form}</h1>
+            <p style="font-size: ${baseSize * 0.9}px;">${config.deskripsi || defaultConfig.deskripsi}</p>
+          </div>
+
+          <div id="successMessage" class="hidden mb-6 p-4 rounded-lg" style="background-color: ${accentColor}20; border-left: 4px solid ${accentColor};">
+            <p>✓ Form berhasil dikirim ke sistem dan Google Sheets!</p>
+          </div>
+
+          <form id="formKepeminatan" class="space-y-8">
+            <div class="p-6 rounded-lg shadow-md" style="background-color: ${secondaryColor};">
+              <h2 class="font-semibold mb-4 pb-2 border-b-2" style="font-size: ${baseSize * 1.5}px; color: ${primaryColor}; border-color: ${accentColor};">PROFIL INVESTOR</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block font-medium mb-1">Nama Perusahaan *</label>
+                  <input type="text" id="namaPerusahaan" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block font-medium mb-1">Alamat *</label>
+                  <textarea id="alamat" required rows="2" class="w-full px-4 py-2 border rounded-lg bg-slate-50"></textarea>
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Bidang Usaha *</label>
+                  <input type="text" id="bidangUsaha" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Jabatan *</label>
+                  <input type="text" id="jabatan" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Telephone/WA *</label>
+                  <input type="tel" id="telephone" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Email *</label>
+                  <input type="email" id="email" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block font-medium mb-1">Pemilik *</label>
+                  <input type="text" id="pemilik" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-lg shadow-md" style="background-color: ${secondaryColor};">
+              <h2 class="font-semibold mb-4 pb-2 border-b-2" style="font-size: ${baseSize * 1.5}px; color: ${primaryColor}; border-color: ${accentColor};">DETAIL PROPERTI</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block font-medium mb-1">ID Properti/Lahan *</label>
+                  <input type="text" id="idProperti" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Alamat Properti *</label>
+                  <textarea id="alamatProperti" required rows="2" class="w-full px-4 py-2 border rounded-lg bg-slate-50"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block font-medium mb-1">RDTR *</label>
+                    <input type="text" id="rdtr" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                  </div>
+                  <div>
+                    <label class="block font-medium mb-1">KBLI *</label>
+                    <input type="text" id="kbli" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-medium mb-1">Informasi Rencana Kegiatan *</label>
+                  <textarea id="informasiRencana" required rows="3" class="w-full px-4 py-2 border rounded-lg bg-slate-50"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-lg shadow-md" style="background-color: ${secondaryColor};">
+              <h2 class="font-semibold mb-4 pb-2 border-b-2" style="font-size: ${baseSize * 1.5}px; color: ${primaryColor}; border-color: ${accentColor};">KONFIRMASI</h2>
+              <div class="mb-4">
+                <label class="block font-medium mb-2">Tanda Tangan *</label>
+                <canvas id="signatureCanvas" class="signature-pad w-full rounded-lg" width="600" height="200"></canvas>
+                <button type="button" id="clearSignature" class="mt-2 text-sm underline opacity-70">Hapus Tanda Tangan</button>
+              </div>
+              <div>
+                <label class="block font-medium mb-1">Tanggal Pengajuan *</label>
+                <input type="date" id="tanggalPengajuan" required class="w-full px-4 py-2 border rounded-lg bg-slate-50">
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button type="submit" id="submitButton" class="px-8 py-3 rounded-lg font-semibold shadow-lg transition-all transform hover:scale-105 active:scale-95" style="background-color: ${primaryColor}; color: ${secondaryColor};">
+                Kirim Pernyataan
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      setupSignaturePad(config);
+      setupFormHandler(config);
+    }
+
+    function setupSignaturePad(config) {
+      canvas = document.getElementById('signatureCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      ctx.strokeStyle = config.text_color || defaultConfig.text_color;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+
+      const startDrawing = (e) => {
+        isDrawing = true;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      };
+
+      const draw = (e) => {
+        if (!isDrawing) return;
+        if (e.cancelable) e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      };
+
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      window.addEventListener('mouseup', () => {
+        if (isDrawing) signatureData = canvas.toDataURL();
+        isDrawing = false;
+      });
+
+      canvas.addEventListener('touchstart', startDrawing, { passive: false });
+      canvas.addEventListener('touchmove', draw, { passive: false });
+      canvas.addEventListener('touchend', () => {
+        signatureData = canvas.toDataURL();
+        isDrawing = false;
+      });
+
+      document.getElementById('clearSignature').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        signatureData = null;
+      });
+    }
+
+    function setupFormHandler(config) {
+      const form = document.getElementById('formKepeminatan');
+      const submitBtn = document.getElementById('submitButton');
+      if (!form || !submitBtn) return;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!signatureData) {
+          alert('Harap buat tanda tangan terlebih dahulu');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sedang Mengirim...';
+
+        const formData = {
+          nama_perusahaan: document.getElementById('namaPerusahaan').value,
+          alamat: document.getElementById('alamat').value,
+          bidang_usaha: document.getElementById('bidangUsaha').value,
+          jabatan: document.getElementById('jabatan').value,
+          telephone: document.getElementById('telephone').value,
+          email: document.getElementById('email').value,
+          pemilik: document.getElementById('pemilik').value,
+          id_properti: document.getElementById('idProperti').value,
+          alamat_properti: document.getElementById('alamatProperti').value,
+          rdtr: document.getElementById('rdtr').value,
+          kbli: document.getElementById('kbli').value,
+          informasi_rencana: document.getElementById('informasiRencana').value,
+          tanggal_pengajuan: document.getElementById('tanggalPengajuan').value,
+          signature: signatureData
+        };
+
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (!result.success) {
+            throw new Error(result.message || 'Gagal mengirim data');
+          }
+
+          if (window.dataSdk && typeof window.dataSdk.create === 'function') {
+            await window.dataSdk.create(formData);
+          }
+
+          document.getElementById('successMessage').classList.remove('hidden');
+          form.reset();
+          if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+          signatureData = null;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat mengirim data.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim Pernyataan';
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeApp();
+
+      // Hamburger Menu Toggle
+      const menuToggle = document.getElementById('menu-toggle');
+      if (menuToggle) {
+        menuToggle.addEventListener('click', function () {
+          const mobileMenu = document.getElementById('mobile-menu');
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
