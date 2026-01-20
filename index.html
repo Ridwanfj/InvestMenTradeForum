@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum Investasi Tegal (FIT) 2026 - Daftar Properti</title>
+    <link rel="icon" type="image/png" href="Asset 1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -495,8 +496,22 @@
             renderList(filtered);
         }
 
-        // Event listeners
-        document.getElementById('search-input').addEventListener('input', filterData);
+        // Debounce utility function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Event listeners dengan debounce untuk search input
+        const debouncedFilter = debounce(filterData, 200);
+        document.getElementById('search-input').addEventListener('input', debouncedFilter);
         document.getElementById('filter-kecamatan').addEventListener('change', filterData);
 
         // Fetch on page load

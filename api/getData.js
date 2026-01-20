@@ -5,11 +5,13 @@ export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+    // Cache headers - cache selama 5 menit, stale-while-revalidate selama 10 menit
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
     // Handle preflight request
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
-    
+
     // Ambil dari Environment Variables (aman, tidak terlihat di client)
     const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
     const SPREADSHEET_GAMBAR_ID = process.env.SPREADSHEET_GAMBAR_ID;
@@ -21,10 +23,10 @@ export default async function handler(req, res) {
     console.log('SPREADSHEET_GAMBAR_ID exists:', !!SPREADSHEET_GAMBAR_ID);
 
     if (!SPREADSHEET_ID || !SPREADSHEET_GAMBAR_ID) {
-        return res.status(500).json({ 
+        return res.status(500).json({
             success: false,
             error: 'Server configuration error',
-            message: 'Spreadsheet IDs not configured. Please check Vercel Environment Variables.' 
+            message: 'Spreadsheet IDs not configured. Please check Vercel Environment Variables.'
         });
     }
 
@@ -50,12 +52,12 @@ export default async function handler(req, res) {
 
         // Parse Google Sheets JSON response (format: /*O_o*/google.visualization.Query.setResponse({...});)
         let jsonData, jsonGambar;
-        
+
         try {
             // Remove prefix "/*O_o*/\ngoogle.visualization.Query.setResponse(" and suffix ");"
             const cleanData = textData.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
             const cleanGambar = textGambar.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
-            
+
             jsonData = JSON.parse(cleanData);
             jsonGambar = JSON.parse(cleanGambar);
         } catch (parseError) {
@@ -73,10 +75,10 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('API Error:', error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             success: false,
             error: 'Failed to fetch data',
-            message: error.message 
+            message: error.message
         });
     }
 }
