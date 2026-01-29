@@ -20,10 +20,18 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
         }
 
+        /* Popup Disclaimer Styles */
         .popup-backdrop {
             backdrop-filter: blur(8px);
             animation: fadeIn 0.3s ease-out;
@@ -33,19 +41,57 @@
             animation: slideUp 0.4s ease-out;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-        .disclaimer-item { transition: all 0.2s ease; }
-        .disclaimer-item:hover { transform: translateX(4px); }
-        .accept-button { transition: all 0.3s ease; }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .disclaimer-item {
+            transition: all 0.2s ease;
+        }
+
+        .disclaimer-item:hover {
+            transform: translateX(4px);
+        }
+
+        .accept-button {
+            transition: all 0.3s ease;
+        }
+
         .accept-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .accept-button:active {
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -54,19 +100,20 @@
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center">
-                <img src="Asset 1.png" alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026
-            </a>
+            <a href="index.html" class="text-2xl font-bold text-blue-800 flex items-center"><img src="Asset 1.png"
+                    alt="Logo" class="h-14 mr-2">Forum Investasi Tegal (FIT) 2026</a>
+            <!-- Hamburger Button -->
             <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
             <nav class="hidden md:flex space-x-6 font-medium">
-                <a href="index.html" class="hover:text-blue-600 transition text-blue-600">Beranda</a>
+                <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
                 <a href="peminatan.html" class="hover:text-blue-600 transition">Peminatan</a>
                 <a href="#" class="hover:text-blue-600 transition">Tentang Kami</a>
                 <a href="contact.html" class="hover:text-blue-600 transition">Kontak</a>
             </nav>
         </div>
+        <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <nav class="container mx-auto px-6 py-4 flex flex-col space-y-3 font-medium">
                 <a href="index.html" class="hover:text-blue-600 transition">Beranda</a>
@@ -84,22 +131,9 @@
         </div>
     </section>
 
-    <div class="container mx-auto px-6 py-8">
-        <div class="max-w-4xl mx-auto overflow-hidden rounded-2xl shadow-2xl bg-black aspect-video">
-            <iframe 
-                class="w-full h-full"
-                src="https://www.youtube.com/embed/HOsBqQXMoGo" 
-                title="FORUM INVESTASI TEGAL" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowfullscreen>
-            </iframe>
-        </div>
-    </div>
-
+    <!-- Search & Filter -->
     <div class="container mx-auto px-6 py-6">
-        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-4 border border-gray-100">
+        <div class="bg-white rounded-xl shadow p-4 flex flex-col md:flex-row gap-4">
             <div class="flex-1 relative">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 <input type="text" id="search-input" placeholder="Cari berdasarkan alamat, kelurahan, kecamatan..."
@@ -107,27 +141,34 @@
             </div>
             <div class="flex gap-2">
                 <select id="filter-kecamatan"
-                    class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    class="px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Semua Kecamatan</option>
                 </select>
             </div>
         </div>
     </div>
 
+    <!-- Loading State -->
     <div id="loading-state" class="container mx-auto px-6 py-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
+            <div class="skeleton rounded-xl h-72"></div>
             <div class="skeleton rounded-xl h-72"></div>
             <div class="skeleton rounded-xl h-72"></div>
             <div class="skeleton rounded-xl h-72"></div>
         </div>
     </div>
 
+    <!-- Property List -->
     <main id="content" class="container mx-auto px-6 pb-12 hidden">
-        <p class="text-gray-500 mb-4 font-medium"><i class="fas fa-building mr-2"></i><span id="total-count">0</span> properti ditemukan</p>
+        <p class="text-gray-500 mb-4"><span id="total-count">0</span> properti ditemukan</p>
         <div id="property-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            </div>
+            <!-- Cards will be inserted here -->
+        </div>
     </main>
 
+    <!-- Empty State -->
     <div id="empty-state" class="container mx-auto px-6 py-12 hidden">
         <div class="bg-gray-100 rounded-xl p-8 text-center">
             <i class="fas fa-search text-gray-400 text-5xl mb-4"></i>
@@ -136,178 +177,553 @@
         </div>
     </div>
 
+    <!-- Error State -->
     <div id="error-state" class="container mx-auto px-6 py-12 hidden">
         <div class="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
             <i class="fas fa-exclamation-triangle text-red-500 text-5xl mb-4"></i>
             <h3 class="text-xl font-bold text-red-700 mb-2">Gagal Memuat Data</h3>
-            <p class="text-red-600 mb-4" id="error-message">Terjadi kesalahan saat mengambil data.</p>
-            <button onclick="fetchData()" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+            <p class="text-red-600 mb-4" id="error-message">Terjadi kesalahan saat mengambil data dari spreadsheet.</p>
+            <button onclick="fetchData()"
+                class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
                 <i class="fas fa-redo mr-2"></i>Coba Lagi
             </button>
         </div>
     </div>
 
-    <footer class="bg-gray-800 text-white py-12 mt-12">
+    <footer class="bg-gray-800 text-white py-8 mt-12">
         <div class="container mx-auto px-6 text-center">
-            <img src="Asset 1.png" alt="Logo" class="h-16 mx-auto mb-4 brightness-0 invert opacity-80">
-            <p class="font-bold text-lg">Forum Investasi Tegal (FIT) 2026</p>
-            <p class="text-gray-400 mt-2">&copy; 2026 Pemerintah Kota Tegal. All rights reserved.</p>
+            <p>&copy; 2026 Forum Investasi Tegal (FIT). All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Toggle Mobile Menu
-        document.getElementById('menu-toggle').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        // Hamburger Menu Toggle
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
+    </script>
 
+    <script>
+        const LOCAL_MODE = false;
+        const SPREADSHEET_ID = '';
+        const SPREADSHEET_GAMBAR_ID = '';
+        const SHEET_NAME = 'Sheet1';
+        const SHEET_GAMBAR_NAME = 'Sheet1';
+
+        // API endpoint (Vercel Serverless Function)
         const API_URL = '/api/getData';
-        let allData = [];
 
+        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
+        const COLUMNS = {
+            no: 0,
+            foto: 1,
+            koordinat: 2,
+            subZona: 3,
+            alamat: 4,
+            luas: 5,
+            statusTanah: 6,
+            kbli: 7,
+            kelurahan: 8,
+            kecamatan: 9,
+            namaSpt: 10,
+            noTelp: 11,
+            zonaZnt: 12,
+            njopBumi: 13,
+            njopBangunan: 14
+        };
+        const COLUMNS_GAMBAR = {
+            no: 0,
+            linkGambar: 1
+        };
+
+        let allData = [];
+        let gambarMap = {}; // Map NO -> Link Gambar
         async function fetchData() {
             const loadingState = document.getElementById('loading-state');
             const content = document.getElementById('content');
             const errorState = document.getElementById('error-state');
+            const emptyState = document.getElementById('empty-state');
+
+            loadingState.classList.remove('hidden');
+            content.classList.add('hidden');
+            errorState.classList.add('hidden');
+            emptyState.classList.add('hidden');
 
             try {
-                const response = await fetch(API_URL);
-                const result = await response.json();
+                let rows, rowsGambar;
 
-                if (!result.success) throw new Error(result.message);
+                if (LOCAL_MODE) {
+                    // Mode Lokal: Fetch langsung dari Google Sheets
+                    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+                    const SHEET_GAMBAR_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_GAMBAR_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_GAMBAR_NAME)}`;
 
-                const rows = result.data.table.rows;
-                const rowsGambar = result.gambar?.table?.rows || [];
-                const gambarMap = {};
+                    const [responseData, responseGambar] = await Promise.all([
+                        fetch(SHEET_URL),
+                        fetch(SHEET_GAMBAR_URL)
+                    ]);
 
+                    if (!responseData.ok) throw new Error('Gagal mengambil data spreadsheet utama');
+                    if (!responseGambar.ok) throw new Error('Gagal mengambil data spreadsheet gambar');
+
+                    const textData = await responseData.text();
+                    const textGambar = await responseGambar.text();
+
+                    // Parse Google Sheets JSON response
+                    const cleanData = textData.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+                    const cleanGambar = textGambar.replace(/^[\s\S]*?google\.visualization\.Query\.setResponse\(/, '').replace(/\);?\s*$/, '');
+
+                    const jsonData = JSON.parse(cleanData);
+                    const jsonGambar = JSON.parse(cleanGambar);
+
+                    rows = jsonData.table.rows;
+                    rowsGambar = jsonGambar.table.rows || [];
+                } else {
+                    // Mode Production: Fetch dari API serverless (Spreadsheet ID tersembunyi di server)
+                    const response = await fetch(API_URL);
+
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data dari server');
+                    }
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.message || 'Terjadi kesalahan');
+                    }
+
+                    rows = result.data.table.rows;
+                    rowsGambar = result.gambar.table.rows || [];
+                }
+
+                if (rows.length === 0) {
+                    throw new Error('Data tidak ditemukan di spreadsheet');
+                }
+
+                // Helper function untuk normalisasi NO (hapus spasi, convert ke string)
+                const normalizeNo = (val) => {
+                    if (val === null || val === undefined) return '';
+                    let str = String(val).trim();
+                    // Hapus .0 jika angka (misal 99.0 -> 99)
+                    if (str.match(/^\d+\.0$/)) {
+                        str = str.replace('.0', '');
+                    }
+                    return str;
+                };
+
+                // Build gambar map dari Sheet2 (NO -> Link Gambar)
+                gambarMap = {};
                 rowsGambar.forEach(row => {
-                    const no = row.c[0]?.v?.toString().trim();
-                    const link = row.c[1]?.v;
-                    if (no && link) gambarMap[no] = link;
+                    const cells = row.c;
+                    const no = normalizeNo(cells[COLUMNS_GAMBAR.no]?.v);
+                    const linkGambar = cells[COLUMNS_GAMBAR.linkGambar]?.v ? String(cells[COLUMNS_GAMBAR.linkGambar].v).trim() : '';
+                    if (no && linkGambar) {
+                        gambarMap[no] = linkGambar;
+                    }
                 });
 
+                // Parse all rows dari Sheet1
                 allData = rows.map((row, index) => {
-                    const c = row.c;
-                    const no = c[0]?.v?.toString().trim();
+                    const cells = row.c;
+                    const no = normalizeNo(cells[COLUMNS.no]?.v);
+
+                    // Ambil foto: prioritas dari Sheet1, jika kosong ambil dari Sheet2 berdasarkan NO
+                    let foto = cells[COLUMNS.foto]?.v ? String(cells[COLUMNS.foto].v).trim() : '';
+                    if (!foto && no && gambarMap[no]) {
+                        foto = gambarMap[no];
+                    }
+
                     return {
-                        index, no,
-                        foto: c[1]?.v || gambarMap[no] || '',
-                        alamat: c[4]?.v || '-',
-                        luas: c[5]?.v || '-',
-                        kelurahan: c[8]?.v || '-',
-                        kecamatan: c[9]?.v || '-',
-                        subZona: c[3]?.v || '-',
-                        namaSpt: c[10]?.v || '-',
-                        njopBumi: c[13]?.v || '-'
+                        index: index,
+                        no: no,
+                        foto: foto,
+                        koordinat: cells[COLUMNS.koordinat]?.v ? String(cells[COLUMNS.koordinat].v) : '',
+                        subZona: cells[COLUMNS.subZona]?.v ? String(cells[COLUMNS.subZona].v) : '-',
+                        alamat: cells[COLUMNS.alamat]?.v ? String(cells[COLUMNS.alamat].v) : '-',
+                        luas: cells[COLUMNS.luas]?.v ? String(cells[COLUMNS.luas].v) : '-',
+                        statusTanah: cells[COLUMNS.statusTanah]?.v ? String(cells[COLUMNS.statusTanah].v) : '-',
+                        kbli: cells[COLUMNS.kbli]?.v ? String(cells[COLUMNS.kbli].v) : '-',
+                        kelurahan: cells[COLUMNS.kelurahan]?.v ? String(cells[COLUMNS.kelurahan].v) : '-',
+                        kecamatan: cells[COLUMNS.kecamatan]?.v ? String(cells[COLUMNS.kecamatan].v) : '-',
+                        namaSpt: cells[COLUMNS.namaSpt]?.v ? String(cells[COLUMNS.namaSpt].v) : '-',
+                        noTelp: cells[COLUMNS.noTelp]?.v ? String(cells[COLUMNS.noTelp].v) : '-',
+                        zonaZnt: cells[COLUMNS.zonaZnt]?.v ? String(cells[COLUMNS.zonaZnt].v) : '-',
+                        njopBumi: cells[COLUMNS.njopBumi]?.v ? String(cells[COLUMNS.njopBumi].v) : '-',
+                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-'
                     };
                 });
 
-                populateFilters();
+                // Populate kecamatan filter
+                populateKecamatanFilter();
+
+                // Render all data
                 renderList(allData);
+
                 loadingState.classList.add('hidden');
                 content.classList.remove('hidden');
-            } catch (err) {
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
                 loadingState.classList.add('hidden');
                 errorState.classList.remove('hidden');
-                document.getElementById('error-message').textContent = err.message;
+                document.getElementById('error-message').textContent = error.message;
             }
         }
 
-        function populateFilters() {
-            const filter = document.getElementById('filter-kecamatan');
-            const kecs = [...new Set(allData.map(d => d.kecamatan))].sort();
-            kecs.forEach(k => {
-                if (k !== '-') {
-                    const opt = document.createElement('option');
-                    opt.value = k.toLowerCase();
-                    opt.textContent = k;
-                    filter.appendChild(opt);
+        function populateKecamatanFilter() {
+            // Normalize kecamatan ke title case untuk menghindari duplikasi case-sensitive
+            const kecamatanMap = new Map(); // Map lowercase -> display name (title case)
+            allData.forEach(d => {
+                if (d.kecamatan && d.kecamatan !== '-') {
+                    const lowerKey = d.kecamatan.toLowerCase();
+                    if (!kecamatanMap.has(lowerKey)) {
+                        // Convert to title case untuk display
+                        const titleCase = d.kecamatan.split(' ')
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                            .join(' ');
+                        kecamatanMap.set(lowerKey, titleCase);
+                    }
                 }
+            });
+
+            const select = document.getElementById('filter-kecamatan');
+            select.innerHTML = '<option value="">Semua Kecamatan</option>';
+            [...kecamatanMap.values()].sort().forEach(kec => {
+                const option = document.createElement('option');
+                option.value = kec.toLowerCase();
+                option.textContent = kec;
+                select.appendChild(option);
             });
         }
 
-        function convertDriveUrl(url) {
-            if (!url) return '';
-            const driveMatch = url.match(/id=([^&]+)/) || url.match(/\/d\/([^/]+)/);
-            return driveMatch ? `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w800` : url;
-        }
-
         function renderList(data) {
-            const list = document.getElementById('property-list');
-            const total = document.getElementById('total-count');
-            total.textContent = data.length;
+            const container = document.getElementById('property-list');
+            const emptyState = document.getElementById('empty-state');
+            const content = document.getElementById('content');
 
             if (data.length === 0) {
-                document.getElementById('empty-state').classList.remove('hidden');
-                list.innerHTML = '';
+                content.classList.add('hidden');
+                emptyState.classList.remove('hidden');
                 return;
             }
 
-            document.getElementById('empty-state').classList.add('hidden');
-            list.innerHTML = data.map(item => `
-                <a href="detail.html?row=${item.index}" class="property-card bg-white rounded-xl shadow-md overflow-hidden block border border-gray-100">
-                    <div class="relative h-48 bg-gray-200">
-                        <img src="${convertDriveUrl(item.foto)}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x300?text=Foto+Properti'">
-                        <div class="absolute top-2 left-2 bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full uppercase font-bold">
-                            ${item.subZona}
+            content.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            document.getElementById('total-count').textContent = data.length;
+
+            container.innerHTML = data.map(item => {
+                // Get image URL from foto field (bisa dari Sheet1 atau Sheet2)
+                const imageUrl = convertToDirectImageUrl(item.foto);
+                const imageNumber = item.no || (item.index + 1);
+
+                // Truncate KBLI untuk card view
+                const kbliShort = item.kbli && item.kbli !== '-'
+                    ? (item.kbli.length > 50 ? item.kbli.substring(0, 50) + '...' : item.kbli)
+                    : '-';
+
+                return `
+                    <a href="detail.html?row=${item.index}" class="property-card bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 block">
+                        <div class="relative h-48 overflow-hidden bg-gray-200">
+                            ${imageUrl ? `
+                            <img src="${imageUrl}" 
+                                 alt="Properti ${imageNumber}" 
+                                 class="w-full h-full object-cover"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 items-center justify-center absolute inset-0" style="display:none;">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-building text-4xl mb-2 opacity-80"></i>
+                                    <p class="text-sm opacity-70">Foto tidak tersedia</p>
+                                </div>
+                            </div>
+                            ` : `
+                            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-building text-4xl mb-2 opacity-80"></i>
+                                    <p class="text-sm opacity-70">Properti #${imageNumber}</p>
+                                </div>
+                            </div>
+                            `}
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold line-clamp-1 max-w-[200px]">
+                                    ${item.subZona}
+                                </span>
+                            </div>
+                            <div class="absolute top-3 right-3">
+                                <span class="bg-white/90 text-gray-800 px-2 py-1 rounded text-xs font-bold">
+                                    #${imageNumber}
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-gray-800 line-clamp-1">${item.alamat}</h3>
-                        <div class="mt-2 text-sm text-gray-500 space-y-1">
-                            <p><i class="fas fa-map-marker-alt w-4"></i> ${item.kelurahan}, ${item.kecamatan}</p>
-                            <p><i class="fas fa-ruler-combined w-4"></i> ${item.luas}</p>
-                            <p><i class="fas fa-user w-4"></i> ${item.namaSpt}</p>
+                        <div class="p-4">
+                            <h3 class="font-bold text-lg mb-2 text-gray-800 line-clamp-2">${item.alamat}</h3>
+                            <div class="space-y-1 text-sm text-gray-500">
+                                <p><i class="fas fa-map-marker-alt w-5 text-blue-500"></i> ${item.kelurahan}, ${item.kecamatan}</p>
+                                <p><i class="fas fa-ruler-combined w-5 text-green-500"></i> ${item.luas}</p>
+                                <p><i class="fas fa-file-contract w-5 text-orange-500"></i> ${item.statusTanah || '-'}</p>
+                                <p><i class="fas fa-user w-5 text-purple-500"></i> ${item.namaSpt}</p>
+                                ${item.njopBumi && item.njopBumi !== '-' ? `<p><i class="fas fa-money-bill-wave w-5 text-emerald-500"></i> NJOP Bumi: ${formatRupiah(item.njopBumi)}</p>` : ''}
+                            </div>
+                            <div class="mt-4 flex items-center justify-between">
+                                <span class="text-blue-600 font-semibold text-sm">Lihat Detail <i class="fas fa-arrow-right ml-1"></i></span>
+                            </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t text-blue-600 font-bold text-sm flex justify-between items-center">
-                            Lihat Detail <i class="fas fa-chevron-right text-xs"></i>
-                        </div>
-                    </div>
-                </a>
-            `).join('');
+                    </a>
+                `;
+            }).join('');
         }
 
-        function handleFilter() {
-            const search = document.getElementById('search-input').value.toLowerCase();
-            const kec = document.getElementById('filter-kecamatan').value;
-            const filtered = allData.filter(d => 
-                (d.alamat.toLowerCase().includes(search) || d.kelurahan.toLowerCase().includes(search)) &&
-                (!kec || d.kecamatan.toLowerCase() === kec)
-            );
+        function filterData() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const kecamatanFilter = document.getElementById('filter-kecamatan').value.toLowerCase();
+
+            const filtered = allData.filter(item => {
+                const matchSearch = !searchTerm ||
+                    item.alamat.toLowerCase().includes(searchTerm) ||
+                    item.kelurahan.toLowerCase().includes(searchTerm) ||
+                    item.kecamatan.toLowerCase().includes(searchTerm) ||
+                    item.namaSpt.toLowerCase().includes(searchTerm) ||
+                    item.subZona.toLowerCase().includes(searchTerm) ||
+                    item.kbli.toLowerCase().includes(searchTerm) ||
+                    item.zonaZnt.toLowerCase().includes(searchTerm) ||
+                    item.no.toLowerCase().includes(searchTerm);
+
+                const matchKecamatan = !kecamatanFilter || item.kecamatan.toLowerCase() === kecamatanFilter;
+
+                return matchSearch && matchKecamatan;
+            });
+
             renderList(filtered);
         }
 
-        document.getElementById('search-input').addEventListener('input', handleFilter);
-        document.getElementById('filter-kecamatan').addEventListener('change', handleFilter);
+        // Debounce utility function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
+        // Event listeners dengan debounce untuk search input
+        const debouncedFilter = debounce(filterData, 200);
+        document.getElementById('search-input').addEventListener('input', debouncedFilter);
+        document.getElementById('filter-kecamatan').addEventListener('change', filterData);
+
+        // Fetch on page load
         fetchData();
+
+        // Format angka ke Rupiah
+        function formatRupiah(value) {
+            if (!value || value === '-') return '-';
+            // Hapus semua karakter non-digit
+            const num = String(value).replace(/\D/g, '');
+            if (!num) return '-';
+            // Format dengan separator ribuan
+            return 'Rp ' + num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // Convert Google Drive links to direct image URLs
+        function convertToDirectImageUrl(url) {
+            if (!url) return '';
+
+            url = String(url).trim();
+
+            // Cache busting - tambah timestamp agar browser selalu ambil gambar terbaru
+            const cacheBuster = `&t=${Date.now()}`;
+
+            // Google Drive format: https://drive.google.com/file/d/FILE_ID/view
+            const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^\/]+)/);
+            if (driveMatch) {
+                const fileId = driveMatch[1];
+                // Try thumbnail URL which is more reliable
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
+            }
+
+            // Google Drive format: https://drive.google.com/open?id=FILE_ID
+            const driveMatch2 = url.match(/drive\.google\.com\/open\?id=([^&]+)/);
+            if (driveMatch2) {
+                const fileId = driveMatch2[1];
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
+            }
+
+            // Google Drive direct link format: https://drive.google.com/uc?id=FILE_ID
+            const driveMatch3 = url.match(/drive\.google\.com\/uc\?id=([^&]+)/);
+            if (driveMatch3) {
+                const fileId = driveMatch3[1];
+                return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800${cacheBuster}`;
+            }
+
+            // Already a direct URL - tambah cache buster
+            if (url.startsWith('http') || url.startsWith('//')) {
+                const separator = url.includes('?') ? '&' : '?';
+                return `${url}${separator}t=${Date.now()}`;
+            }
+
+            return '';
+        }
     </script>
 
-    <div id="disclaimer-popup" class="popup-backdrop fixed inset-0 flex items-center justify-center p-4 z-[100]" style="background: rgba(0,0,0,0.8); display: none;">
-        <div class="popup-content bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl">
-            <div class="bg-blue-700 p-6 text-white text-center">
-                <i class="fas fa-exclamation-circle text-4xl mb-2 text-yellow-400"></i>
-                <h2 class="text-xl font-bold">Disclaimer Penting</h2>
+    <!-- Disclaimer Popup -->
+    <div id="disclaimer-popup"
+        class="popup-backdrop fixed inset-0 w-full h-full flex items-center justify-center p-4 z-[100]"
+        style="background: rgba(15, 23, 42, 0.75); display: none;">
+        <div class="popup-content w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden"
+            style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+            <!-- Header -->
+            <div class="p-6 border-b"
+                style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); border-color: rgba(255,255,255,0.1);">
+                <div class="flex items-center gap-3">
+                    <svg class="w-8 h-8" style="color: #fbbf24;" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <h1 class="text-2xl font-bold" style="color: #ffffff;">Disclaimer Penting</h1>
+                </div>
+                <p class="mt-2 text-sm" style="color: rgba(255,255,255,0.9);">Forum Investasi Tegal 2026</p>
             </div>
-            <div class="p-6 text-sm text-gray-600 space-y-3">
-                <p>Data yang tersaji merupakan hasil survei DPMPTSP Kota Tegal dan belum dikonfirmasikan langsung kepada pemilik properti.</p>
-                <p>Informasi ini ditujukan untuk promosi investasi. Komunikasi dan transaksi lebih lanjut dilakukan langsung dengan pemilik properti.</p>
+            <!-- Content -->
+            <div class="p-6" style="max-height: 60vh; overflow-y: auto;">
+                <p class="text-sm mb-6" style="color: #475569;">Mohon baca dengan seksama sebelum melanjutkan:</p>
+                <div class="space-y-4">
+                    <!-- Item 1 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data yang tersaji dalam
+                            halaman website forum Investasi Tegal 2026 merupakan hasil survei Dinas Penanaman Modal dan
+                            Pelayanan Terpadu Satu Pintu Kota Tegal dan sumber data lainnya.</p>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data yang tersaji belum
+                            dikonfirmasikan kepada pemilik properti.</p>
+                    </div>
+                    <!-- Item 3 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi dan data disajikan dengan
+                            tujuan untuk promosi potensi Investasi.</p>
+                    </div>
+                    <!-- Item 4 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Konfirmasi terhadap data properti
+                            dapat disampaikan melalui chat ke helpdesk <span class="font-semibold"
+                                style="color: #2563eb;">08112970114</span> pada hari dan jam kerja.</p>
+                    </div>
+                    <!-- Item 5 -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(59, 130, 246, 0.05);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #2563eb;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed" style="color: #1e293b;">Informasi, komunikasi dan transaksi
+                            lebih lanjut dilakukan secara langsung antara calon investor yang berminat dengan pemilik
+                            properti.</p>
+                    </div>
+                    <!-- Item 6 - Warning -->
+                    <div class="disclaimer-item flex gap-3 p-4 rounded-lg"
+                        style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+                        <div class="flex-shrink-0">
+                            <svg class="w-6 h-6 mt-0.5" style="color: #ef4444;" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="text-sm leading-relaxed font-semibold" style="color: #991b1b;">Membebaskan segala
+                            tuntutan hukum bagi administrator atas penyalahgunaan informasi yang tersaji dalam halaman
+                            website ini.</p>
+                    </div>
+                </div>
             </div>
-            <div class="p-4 bg-gray-50 border-t">
-                <button onclick="acceptDisclaimer()" class="accept-button w-full bg-blue-700 text-white py-3 rounded-xl font-bold">Saya Mengerti</button>
+            <!-- Footer -->
+            <div class="p-6 border-t" style="background: #f8fafc; border-color: #e2e8f0;">
+                <button id="accept-disclaimer-btn"
+                    class="accept-button w-full py-3 px-6 rounded-lg font-semibold text-white text-base"
+                    style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);">
+                    Saya Mengerti
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        function acceptDisclaimer() {
-            localStorage.setItem('fit2026_accepted', 'true');
-            document.getElementById('disclaimer-popup').style.display = 'none';
-            document.body.style.overflow = '';
-        }
-        if(!localStorage.getItem('fit2026_accepted')) {
-            document.getElementById('disclaimer-popup').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
+        // Disclaimer Popup Logic
+        (function () {
+            const DISCLAIMER_KEY = 'fit2026_disclaimer_accepted';
+            const popup = document.getElementById('disclaimer-popup');
+            const acceptBtn = document.getElementById('accept-disclaimer-btn');
+
+            // Check if user has already accepted disclaimer
+            function hasAcceptedDisclaimer() {
+                return localStorage.getItem(DISCLAIMER_KEY) === 'true';
+            }
+
+            // Show popup if not accepted
+            function showPopup() {
+                if (!hasAcceptedDisclaimer()) {
+                    popup.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            // Hide popup and save acceptance
+            function hidePopup() {
+                popup.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    popup.style.display = 'none';
+                    document.body.style.overflow = '';
+                    localStorage.setItem(DISCLAIMER_KEY, 'true');
+                }, 300);
+            }
+
+            // Event listener for accept button
+            acceptBtn.addEventListener('click', hidePopup);
+
+            // Show popup on page load
+            showPopup();
+        })();
     </script>
+
 </body>
+
 </html>
