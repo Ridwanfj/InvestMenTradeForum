@@ -185,7 +185,7 @@
         // API endpoint (Vercel Serverless Function)
         const API_URL = '/api/getData';
 
-        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
+        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN | KETERANGAN | KATEGORI PROPERTY
         const COLUMNS = {
             no: 0,
             foto: 1,
@@ -201,7 +201,9 @@
             noTelp: 11,
             zonaZnt: 12,
             njopBumi: 13,
-            njopBangunan: 14
+            njopBangunan: 14,
+            keterangan: 15,
+            kategoriProperty: 16
         };
 
         const COLUMNS_GAMBAR = {
@@ -224,6 +226,8 @@
             { key: 'zonaZnt', label: 'Zona ZNT', icon: 'fas fa-map', color: 'amber', isCurrency: true },
             { key: 'njopBumi', label: 'NJOP Bumi', icon: 'fas fa-money-bill-wave', color: 'emerald', isCurrency: true },
             { key: 'njopBangunan', label: 'NJOP Bangunan', icon: 'fas fa-building', color: 'lime', isCurrency: true },
+            { key: 'keterangan', label: 'Keterangan', icon: 'fas fa-info-circle', color: 'sky', isScrollable: true },
+            { key: 'kategoriProperty', label: 'Kategori Property', icon: 'fas fa-tags', color: 'violet' },
             { key: 'koordinat', label: 'Koordinat', icon: 'fas fa-crosshairs', color: 'pink' }
         ];
 
@@ -342,7 +346,9 @@
                         noTelp: cells[COLUMNS.noTelp]?.v ? String(cells[COLUMNS.noTelp].v) : '-',
                         zonaZnt: cells[COLUMNS.zonaZnt]?.v ? String(cells[COLUMNS.zonaZnt].v) : '-',
                         njopBumi: cells[COLUMNS.njopBumi]?.v ? String(cells[COLUMNS.njopBumi].v) : '-',
-                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-'
+                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-',
+                        keterangan: cells[COLUMNS.keterangan]?.v ? String(cells[COLUMNS.keterangan].v) : '-',
+                        kategoriProperty: cells[COLUMNS.kategoriProperty]?.v ? String(cells[COLUMNS.kategoriProperty].v) : '-'
                     };
                 });
 

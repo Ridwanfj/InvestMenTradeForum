@@ -214,7 +214,7 @@
         // API endpoint (Vercel Serverless Function)
         const API_URL = '/api/getData';
 
-        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN
+        // NO | FOTO | KOORDINAT | SUB ZONA | ALAMAT | PERKIRAAN LUAS | STATUS TANAH | KBLI | KELURAHAN | KECAMATAN | NAMA SPT | NO. TELP | ZonaZNT | NJOP BUMI | NJOP BANGUNAN | KETERANGAN | KATEGORI PROPERTY
         const COLUMNS = {
             no: 0,
             foto: 1,
@@ -230,7 +230,9 @@
             noTelp: 11,
             zonaZnt: 12,
             njopBumi: 13,
-            njopBangunan: 14
+            njopBangunan: 14,
+            keterangan: 15,
+            kategoriProperty: 16
         };
         const COLUMNS_GAMBAR = {
             no: 0,
@@ -349,7 +351,9 @@
                         noTelp: cells[COLUMNS.noTelp]?.v ? String(cells[COLUMNS.noTelp].v) : '-',
                         zonaZnt: cells[COLUMNS.zonaZnt]?.v ? String(cells[COLUMNS.zonaZnt].v) : '-',
                         njopBumi: cells[COLUMNS.njopBumi]?.v ? String(cells[COLUMNS.njopBumi].v) : '-',
-                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-'
+                        njopBangunan: cells[COLUMNS.njopBangunan]?.v ? String(cells[COLUMNS.njopBangunan].v) : '-',
+                        keterangan: cells[COLUMNS.keterangan]?.v ? String(cells[COLUMNS.keterangan].v) : '-',
+                        kategoriProperty: cells[COLUMNS.kategoriProperty]?.v ? String(cells[COLUMNS.kategoriProperty].v) : '-'
                     };
                 });
 
@@ -444,10 +448,15 @@
                                 </div>
                             </div>
                             `}
-                            <div class="absolute top-3 left-3">
+                            <div class="absolute top-3 left-3 flex flex-col gap-1">
                                 <span class="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold line-clamp-1 max-w-[200px]">
                                     ${item.subZona}
                                 </span>
+                                ${item.keterangan && item.keterangan !== '-' ? `
+                                <span class="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-semibold line-clamp-1 max-w-[200px]">
+                                    ${item.keterangan}
+                                </span>
+                                ` : ''}
                             </div>
                             <div class="absolute top-3 right-3">
                                 <span class="bg-white/90 text-gray-800 px-2 py-1 rounded text-xs font-bold">
@@ -486,7 +495,9 @@
                     item.subZona.toLowerCase().includes(searchTerm) ||
                     item.kbli.toLowerCase().includes(searchTerm) ||
                     item.zonaZnt.toLowerCase().includes(searchTerm) ||
-                    item.no.toLowerCase().includes(searchTerm);
+                    item.no.toLowerCase().includes(searchTerm) ||
+                    item.keterangan.toLowerCase().includes(searchTerm) ||
+                    item.kategoriProperty.toLowerCase().includes(searchTerm);
 
                 const matchKecamatan = !kecamatanFilter || item.kecamatan.toLowerCase() === kecamatanFilter;
 
