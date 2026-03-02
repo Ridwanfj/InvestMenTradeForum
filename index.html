@@ -710,42 +710,43 @@
     </div>
 
     <script>
-        // Disclaimer Popup Logic
-        (function () {
-            const DISCLAIMER_KEY = 'fit2026_disclaimer_accepted';
-            const popup = document.getElementById('disclaimer-popup');
-            const acceptBtn = document.getElementById('accept-disclaimer-btn');
+    // Disclaimer Popup Logic - Muncul setiap sesi baru
+    (function () {
+        // Menggunakan sessionStorage agar muncul setiap kali tab/browser dibuka kembali
+        const DISCLAIMER_KEY = 'fit2026_disclaimer_accepted_session'; 
+        const popup = document.getElementById('disclaimer-popup');
+        const acceptBtn = document.getElementById('accept-disclaimer-btn');
 
-            // Check if user has already accepted disclaimer
-            function hasAcceptedDisclaimer() {
-                return localStorage.getItem(DISCLAIMER_KEY) === 'true';
+        // Cek apakah user sudah setuju DI SESI INI
+        function hasAcceptedDisclaimer() {
+            return sessionStorage.getItem(DISCLAIMER_KEY) === 'true';
+        }
+
+        // Tampilkan popup
+        function showPopup() {
+            if (!hasAcceptedDisclaimer()) {
+                popup.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
             }
+        }
 
-            // Show popup if not accepted
-            function showPopup() {
-                if (!hasAcceptedDisclaimer()) {
-                    popup.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                }
-            }
+        // Sembunyikan popup dan simpan status ke SESSION
+        function hidePopup() {
+            popup.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                popup.style.display = 'none';
+                document.body.style.overflow = '';
+                // Disimpan di sessionStorage (hilang saat tab ditutup)
+                sessionStorage.setItem(DISCLAIMER_KEY, 'true');
+            }, 300);
+        }
 
-            // Hide popup and save acceptance
-            function hidePopup() {
-                popup.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    popup.style.display = 'none';
-                    document.body.style.overflow = '';
-                    localStorage.setItem(DISCLAIMER_KEY, 'true');
-                }, 300);
-            }
+        acceptBtn.addEventListener('click', hidePopup);
 
-            // Event listener for accept button
-            acceptBtn.addEventListener('click', hidePopup);
-
-            // Show popup on page load
-            showPopup();
-        })();
-    </script>
+        // Jalankan saat halaman dimuat
+        showPopup();
+    })();
+</script>
 
 </body>
 
